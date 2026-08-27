@@ -416,17 +416,16 @@ const absentPercentage = computed(() => {
                 <div class="min-w-0">
 
                   <p class="success-title">
-                    {{ messageType === 'delete'
-                      ? 'Record Deleted'
-                      : editingRecord
-                        ? 'Attendance Updated'
-                        : 'Student Successfully Added'
-                    }}
-                  </p>
-
-                  <p class="success-text">
-                    {{ message }}
-                  </p>
+  {{
+    message.includes('successfully updated')
+      ? 'Attendance Updated'
+      : message.includes('successfully added')
+        ? 'Student Successfully Added'
+        : messageType === 'delete'
+          ? 'Record Deleted'
+          : 'Action Completed'
+  }}
+</p>
 
                 </div>
 
