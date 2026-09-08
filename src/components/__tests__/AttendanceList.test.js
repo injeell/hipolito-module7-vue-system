@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
+
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import AttendanceList from '../AttendanceList.vue'
 
 describe('AttendanceList', () => {
+
   it('shows the empty state when there are no records', () => {
     const wrapper = mount(AttendanceList, {
       props: {
@@ -16,6 +18,7 @@ describe('AttendanceList', () => {
       'Add a student record using the form above.'
     )
   })
+
 
   it('displays attendance records', () => {
     const records = [
@@ -68,6 +71,7 @@ describe('AttendanceList', () => {
     expect(wrapper.text()).toContain('BSIT-3C')
   })
 
+
   it('applies the correct status classes', () => {
     const records = [
       {
@@ -107,6 +111,7 @@ describe('AttendanceList', () => {
     expect(wrapper.find('.status-badge.absent').exists()).toBe(true)
   })
 
+
   it('emits edit when an edit button is clicked', async () => {
     const record = {
       id: 1,
@@ -123,7 +128,9 @@ describe('AttendanceList', () => {
       }
     })
 
-    const editButton = wrapper.find('button[title="Edit record"]')
+    const editButton = wrapper.find(
+      'button[title="Edit record"]'
+    )
 
     await editButton.trigger('click')
 
@@ -131,6 +138,7 @@ describe('AttendanceList', () => {
     expect(wrapper.emitted('edit')).toHaveLength(1)
     expect(wrapper.emitted('edit')[0][0]).toEqual(record)
   })
+
 
   it('emits delete with the record id when delete is clicked', async () => {
     const record = {
@@ -148,7 +156,9 @@ describe('AttendanceList', () => {
       }
     })
 
-    const deleteButton = wrapper.find('button[title="Delete record"]')
+    const deleteButton = wrapper.find(
+      'button[title="Delete record"]'
+    )
 
     await deleteButton.trigger('click')
 
@@ -156,4 +166,31 @@ describe('AttendanceList', () => {
     expect(wrapper.emitted('delete')).toHaveLength(1)
     expect(wrapper.emitted('delete')[0][0]).toBe(1)
   })
+
+
+  // Module 9 - Attendance Status Filter Test
+  it('checks attendance records by status filter', () => {
+    const records = [
+      {
+        id: 1,
+        studentID: '2026-001',
+        studentName: 'Juan Dela Cruz',
+        date: '2026-08-25',
+        status: 'Present',
+        section: 'BSIT-3A'
+      }
+    ]
+
+    const wrapper = mount(AttendanceList, {
+      props: {
+        records
+      }
+    })
+
+    expect(wrapper.text()).toContain('Present')
+    expect(wrapper.text()).not.toContain(
+      'No attendance records'
+    )
+  })
+
 })
