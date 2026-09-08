@@ -151,5 +151,22 @@ The change improves the existing Campus Attendance Management System by adding a
 9. The status filter works correctly on desktop and mobile screen sizes.
 
 
-
-
+=======
+Updated Test Cases
+| Test ID | Test Case                                         | Expected Result                                          | Actual Result                  | Status |
+| ------- | ------------------------------------------------- | -------------------------------------------------------- | ------------------------------ | ------ |
+| M9-01   | Select **All** from Status Filter                 | All attendance records are displayed                     | All records displayed          | PASS   |
+| M9-02   | Select **Present**                                | Only Present records are displayed                       | Only Present records displayed | PASS   |
+| M9-03   | Select **Late**                                   | Only Late records are displayed                          | Only Late records displayed    | PASS   |
+| M9-04   | Select **Absent**                                 | Only Absent records are displayed                        | Only Absent records displayed  | PASS   |
+| M9-05   | Search while **Present** filter is active         | Search results remain limited to Present records         | Works correctly                | PASS   |
+| M9-06   | Search while **Late** filter is active            | Search results remain limited to Late records            | Works correctly                | PASS   |
+| M9-07   | Search while **Absent** filter is active          | Search results remain limited to Absent records          | Works correctly                | PASS   |
+| M9-08   | Add a valid attendance record                     | Record is added successfully                             | Record added                   | PASS   |
+| M9-09   | Edit an existing attendance record                | Updated record is displayed correctly                    | Updated correctly              | PASS   |
+| M9-10   | Delete an attendance record                       | Record is removed after confirmation                     | Removed correctly              | PASS   |
+| M9-11   | Submit attendance form with required fields empty | Validation prevents submission                           | Validation works               | PASS   |
+| M9-12   | Refresh the browser after adding records          | Attendance records remain available through localStorage | Records persisted              | PASS   |
+| M9-13   | Use the filter on mobile-width screen             | Filter remains visible and usable                        | Works correctly                | PASS   |
+| M9-14   | Use the filter on desktop-width screen            | Filter is properly displayed and usable                  | Works correctly                | PASS   |
+>>>>>>> 03b4811 (docs: add Module 9 change request)
