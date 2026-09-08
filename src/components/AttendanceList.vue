@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { computed, ref } from 'vue'
+
+const props = defineProps({
   records: {
     type: Array,
     default: () => []
@@ -10,15 +12,86 @@ const emit = defineEmits([
   'edit',
   'delete'
 ])
+
+/*
+|--------------------------------------------------------------------------
+| STATUS FILTER
+|--------------------------------------------------------------------------
+| Default is "All" so the existing behavior remains unchanged.
+*/
+const statusFilter = ref('All')
+
+const filteredRecords = computed(() => {
+  if (statusFilter.value === 'All') {
+    return props.records
+  }
+
+  return props.records.filter(
+    record => record.status === statusFilter.value
+  )
+})
 </script>
 
 <template>
 
   <div class="records-card">
 
+    <!-- STATUS FILTER -->
+    <div class="filter-bar">
+
+      <div class="filter-info">
+
+        <p class="filter-title">
+          Filter Attendance
+        </p>
+
+        <p class="filter-description">
+          View records by attendance status.
+        </p>
+
+      </div>
+
+      <div class="filter-control">
+
+        <label
+          for="status-filter"
+          class="filter-label"
+        >
+          Status:
+        </label>
+
+        <select
+          id="status-filter"
+          v-model="statusFilter"
+          class="status-filter"
+          aria-label="Filter attendance by status"
+        >
+
+          <option value="All">
+            All
+          </option>
+
+          <option value="Present">
+            Present
+          </option>
+
+          <option value="Late">
+            Late
+          </option>
+
+          <option value="Absent">
+            Absent
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
     <!-- EMPTY -->
     <div
-      v-if="records.length === 0"
+      v-if="filteredRecords.length === 0"
       class="empty-state"
     >
 
@@ -79,7 +152,7 @@ const emit = defineEmits([
         <tbody>
 
           <tr
-            v-for="record in records"
+            v-for="record in filteredRecords"
             :key="record.id"
             class="table-row"
           >
@@ -166,6 +239,7 @@ const emit = defineEmits([
                   @click="emit('edit', record)"
                   class="edit-action"
                   title="Edit record"
+                  aria-label="Edit record"
                 >
                   ✎
                 </button>
@@ -174,6 +248,7 @@ const emit = defineEmits([
                   @click="emit('delete', record.id)"
                   class="delete-action"
                   title="Delete record"
+                  aria-label="Delete record"
                 >
                   ×
                 </button>
@@ -192,12 +267,12 @@ const emit = defineEmits([
 
     <!-- MOBILE -->
     <div
-      v-if="records.length > 0"
+      v-if="filteredRecords.length > 0"
       class="md:hidden p-3 space-y-3"
     >
 
       <div
-        v-for="record in records"
+        v-for="record in filteredRecords"
         :key="record.id"
         class="mobile-record"
       >
@@ -253,6 +328,7 @@ const emit = defineEmits([
         <div class="mobile-details">
 
           <div>
+
             <p class="mobile-detail-label">
               Date
             </p>
@@ -260,9 +336,11 @@ const emit = defineEmits([
             <p class="mobile-detail-value">
               {{ record.date }}
             </p>
+
           </div>
 
           <div>
+
             <p class="mobile-detail-label">
               Section
             </p>
@@ -270,6 +348,7 @@ const emit = defineEmits([
             <span class="section-badge">
               {{ record.section }}
             </span>
+
           </div>
 
         </div>
@@ -303,9 +382,60 @@ const emit = defineEmits([
 <style scoped>
 @reference "../style.css";
 
+/*
+|--------------------------------------------------------------------------
+| RECORDS CARD
+|--------------------------------------------------------------------------
+*/
+
 .records-card {
   @apply bg-white rounded-b-2xl border-x border-b border-[#E8DDD5] shadow-sm overflow-hidden;
 }
+
+/*
+|--------------------------------------------------------------------------
+| STATUS FILTER
+|--------------------------------------------------------------------------
+*/
+
+.filter-bar {
+  @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-[#FFF9F5] border-b border-[#EEE3DC];
+}
+
+.filter-info {
+  @apply min-w-0;
+}
+
+.filter-title {
+  @apply text-sm font-bold text-[#463732];
+}
+
+.filter-description {
+  @apply text-xs text-[#9A8880] mt-0.5;
+}
+
+.filter-control {
+  @apply flex items-center gap-2;
+}
+
+.filter-label {
+  @apply text-xs font-bold text-[#7A685F];
+}
+
+.status-filter {
+  @apply min-w-[140px] px-3 py-2 rounded-xl border border-[#E6D6CD] bg-white text-sm text-[#5E4D47] font-medium outline-none cursor-pointer;
+}
+
+.status-filter:focus {
+  border-color: #B88178;
+  box-shadow: 0 0 0 3px #F1E1DB;
+}
+
+/*
+|--------------------------------------------------------------------------
+| EMPTY STATE
+|--------------------------------------------------------------------------
+*/
 
 .empty-state {
   @apply px-5 py-16 text-center;
@@ -323,6 +453,12 @@ const emit = defineEmits([
   @apply text-sm text-[#988780] mt-1;
 }
 
+/*
+|--------------------------------------------------------------------------
+| TABLE
+|--------------------------------------------------------------------------
+*/
+
 .table-head {
   @apply bg-[#FFF9F5] border-b border-[#EEE3DC] text-left;
 }
@@ -339,6 +475,12 @@ const emit = defineEmits([
   @apply px-5 py-4;
 }
 
+/*
+|--------------------------------------------------------------------------
+| STUDENT
+|--------------------------------------------------------------------------
+*/
+
 .student-info {
   @apply flex items-center gap-3;
 }
@@ -354,6 +496,12 @@ const emit = defineEmits([
 .student-caption {
   @apply text-[10px] text-[#A1948E] mt-0.5;
 }
+
+/*
+|--------------------------------------------------------------------------
+| STATUS BADGES
+|--------------------------------------------------------------------------
+*/
 
 .status-badge {
   @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold;
@@ -387,9 +535,21 @@ const emit = defineEmits([
   background: #C75C57;
 }
 
+/*
+|--------------------------------------------------------------------------
+| SECTION
+|--------------------------------------------------------------------------
+*/
+
 .section-badge {
   @apply inline-flex px-3 py-1.5 rounded-lg bg-[#EDE8E1] text-[#7A685F] text-xs font-semibold;
 }
+
+/*
+|--------------------------------------------------------------------------
+| DESKTOP ACTIONS
+|--------------------------------------------------------------------------
+*/
 
 .action-group {
   @apply flex items-center gap-2;
@@ -403,6 +563,12 @@ const emit = defineEmits([
   @apply w-9 h-9 rounded-lg border border-[#F0D8D4] bg-[#FFF7F5] text-[#B75F57] flex items-center justify-center hover:bg-[#FAE7E3] hover:-translate-y-0.5 transition-all;
 }
 
+/*
+|--------------------------------------------------------------------------
+| MOBILE
+|--------------------------------------------------------------------------
+*/
+
 .mobile-record {
   @apply bg-[#FFFCF9] border border-[#E9DED6] rounded-2xl p-4;
 }
@@ -415,7 +581,7 @@ const emit = defineEmits([
   @apply text-[10px] uppercase tracking-wider font-semibold text-[#A0928B] mb-1;
 }
 
-.mobile-detail-value {
+.mobile-de+tail-value {
   @apply text-xs font-medium text-[#6C5D56];
 }
 
