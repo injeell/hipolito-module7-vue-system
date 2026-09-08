@@ -149,3 +149,7 @@ The change improves the existing Campus Attendance Management System by adding a
 7. The status filter works together with the existing search function.
 8. Existing Add Attendance, View, Edit, Delete, Validation, Delete Confirmation, and Local Storage functions continue to work correctly.
 9. The status filter works correctly on desktop and mobile screen sizes.
+
+
+
+
