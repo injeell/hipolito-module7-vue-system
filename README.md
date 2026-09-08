@@ -121,3 +121,35 @@ src/
 ├── main.js
 └── style.css
 ```
+
+# Module 9 - Software Evolution
+
+## Change Request
+
+**Change Request ID:** CR-M9-01
+
+**Title:** Add Attendance Status Filter
+
+**Maintenance Type:** Perfective Maintenance
+
+## Maintenance Type
+
+**Perfective Maintenance**
+
+The change improves the existing Campus Attendance Management System by adding an attendance status filter. Users can filter attendance records by All, Present, Late, or Absent while keeping the existing attendance features working.
+
+## Acceptance Criteria
+
+1. The system provides a status filter for attendance records.
+2. The status filter provides All, Present, Late, and Absent options.
+3. Selecting Present displays only Present attendance records.
+4. Selecting Late displays only Late attendance records.
+5. Selecting Absent displays only Absent attendance records.
+6. Selecting All displays all attendance records.
+7. The status filter works together with the existing search function.
+8. Existing Add Attendance, View, Edit, Delete, Validation, Delete Confirmation, and Local Storage functions continue to work correctly.
+9. The status filter works correctly on desktop and mobile screen sizes.
+
+
+
+
