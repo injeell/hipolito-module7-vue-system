@@ -1,10 +1,33 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+  currentUser: {
+    type: Object,
+    default: () => ({
+      fullName: 'Administrator',
+      role: 'Attendance Management'
+    })
+  }
+})
+
+const emit = defineEmits(['logout'])
+
+const userInitial = computed(() => {
+  return props.currentUser?.fullName
+    ? props.currentUser.fullName.charAt(0).toUpperCase()
+    : 'A'
+})
 
 const menuOpen = ref(false)
 
 function closeMenu() {
   menuOpen.value = false
+}
+
+function handleLogout() {
+  closeMenu()
+  emit('logout')
 }
 
 function goTo(section) {
@@ -125,27 +148,37 @@ function goTo(section) {
     </nav>
 
     <!-- ADMINISTRATOR -->
-    <div class="px-4 pb-4">
+    <div class="px-4 pb-4 space-y-2">
 
       <div class="admin-sidebar-card">
 
         <div class="admin-sidebar-avatar">
-          A
+          {{ userInitial }}
         </div>
 
         <div class="min-w-0 flex-1">
 
-          <p class="text-sm font-semibold">
-            Administrator
+          <p class="text-sm font-semibold truncate">
+            {{ currentUser?.fullName || 'Administrator' }}
           </p>
 
-          <p class="text-[10px] text-white/55 mt-0.5">
-            Attendance Management
+          <p class="text-[10px] text-white/55 mt-0.5 truncate">
+            {{ currentUser?.role || 'Attendance Management' }}
           </p>
 
         </div>
 
       </div>
+
+      <button
+        type="button"
+        @click="handleLogout"
+        class="logout-button"
+        aria-label="Log Out"
+      >
+        <span class="text-sm">⎋</span>
+        <span>Log Out</span>
+      </button>
 
     </div>
 
@@ -209,7 +242,7 @@ function goTo(section) {
 
       <!-- MOBILE ADMIN -->
       <div class="mobile-admin-circle">
-        A
+        {{ userInitial }}
       </div>
 
     </div>
@@ -329,27 +362,37 @@ function goTo(section) {
           </nav>
 
           <!-- MOBILE ADMINISTRATOR -->
-          <div class="px-4 pb-5">
+          <div class="px-4 pb-5 space-y-2">
 
             <div class="admin-sidebar-card">
 
               <div class="admin-sidebar-avatar">
-                A
+                {{ userInitial }}
               </div>
 
               <div class="min-w-0 flex-1">
 
-                <p class="text-sm font-semibold">
-                  Administrator
+                <p class="text-sm font-semibold truncate">
+                  {{ currentUser?.fullName || 'Administrator' }}
                 </p>
 
-                <p class="text-[10px] text-white/55 mt-0.5">
-                  Attendance Management
+                <p class="text-[10px] text-white/55 mt-0.5 truncate">
+                  {{ currentUser?.role || 'Attendance Management' }}
                 </p>
 
               </div>
 
             </div>
+
+            <button
+              type="button"
+              @click="handleLogout"
+              class="logout-button"
+              aria-label="Log Out Mobile"
+            >
+              <span class="text-sm">⎋</span>
+              <span>Log Out</span>
+            </button>
 
           </div>
 
@@ -487,5 +530,9 @@ function goTo(section) {
 
 .drawer-close {
   @apply w-9 h-9 rounded-xl bg-white/10 text-white text-2xl flex items-center justify-center hover:bg-white/20 transition;
+}
+
+.logout-button {
+  @apply w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/90 hover:text-white text-xs font-semibold transition-all duration-150 border border-white/10;
 }
 </style>

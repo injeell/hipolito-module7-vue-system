@@ -139,4 +139,46 @@ describe('AppHeader', () => {
 
     expect(menuButton.attributes('aria-expanded')).toBe('false')
   })
+
+  it('renders custom user name and role when currentUser prop is provided', () => {
+    const wrapper = mount(AppHeader, {
+      props: {
+        currentUser: {
+          fullName: 'Prof. Maria Santos',
+          role: 'Faculty Member'
+        }
+      }
+    })
+
+    expect(wrapper.text()).toContain('Prof. Maria Santos')
+    expect(wrapper.text()).toContain('Faculty Member')
+    expect(wrapper.find('.admin-sidebar-avatar').text()).toBe('P')
+  })
+
+  it('emits logout when desktop logout button is clicked', async () => {
+    const wrapper = mount(AppHeader)
+
+    const logoutButton = wrapper.find('button[aria-label="Log Out"]')
+    expect(logoutButton.exists()).toBe(true)
+
+    await logoutButton.trigger('click')
+    expect(wrapper.emitted('logout')).toBeTruthy()
+  })
+
+  it('emits logout and closes menu when mobile logout button is clicked', async () => {
+    const wrapper = mount(AppHeader)
+
+    // Open menu
+    const menuButton = wrapper.get('button[aria-label="Toggle navigation menu"]')
+    await menuButton.trigger('click')
+
+    const mobileLogoutButton = wrapper.find('button[aria-label="Log Out Mobile"]')
+    expect(mobileLogoutButton.exists()).toBe(true)
+
+    await mobileLogoutButton.trigger('click')
+
+    expect(wrapper.emitted('logout')).toBeTruthy()
+    expect(menuButton.attributes('aria-expanded')).toBe('false')
+  })
 })
+

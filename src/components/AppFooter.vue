@@ -1,3 +1,15 @@
+<script setup>
+defineProps({
+  currentUser: {
+    type: Object,
+    default: () => ({
+      fullName: 'Administrator',
+      role: 'Attendance Management'
+    })
+  }
+})
+</script>
+
 <template>
   <footer
     class="mt-10 bg-[#6D2924] text-white"
@@ -37,7 +49,7 @@
         <div class="text-center sm:text-right">
 
           <p class="text-xs text-white/70">
-            Administrator
+            {{ currentUser?.fullName || 'Administrator' }}
           </p>
 
           <p class="text-[11px] text-white/45 mt-1">
