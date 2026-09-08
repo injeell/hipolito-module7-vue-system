@@ -31,6 +31,11 @@ Record**, following the Module 7 scope requirement.
 
 ## Implemented Features
 
+- User authentication (Sign In and Registration)
+- Role-based user session handling with persistent `localStorage` storage
+- Secure logout with confirmation and feedback
+- Pre-seeded Administrator account (`admin` / `admin123`)
+- Dynamic user profile and initial avatar across dashboard and headers
 - Add student attendance records
 - View attendance records
 - Edit existing attendance records
@@ -46,6 +51,18 @@ Record**, following the Module 7 scope requirement.
 - Animated interface interactions
 - Success, validation, and delete feedback
 - GitHub Actions production build check
+
+---
+
+## Default Credentials
+
+For grading, evaluation, or testing, the system provides a pre-configured administrator account:
+
+- **Username:** `admin` (or `admin@campus.edu`)
+- **Password:** `admin123`
+- **Role:** `Administrator`
+
+Users may also register new custom accounts via the **Create Account** tab.
 
 ---
 
@@ -76,17 +93,31 @@ Each attendance record contains:
 
 ---
 
-## Vue Components
+## Vue Components & Project Structure
 
-The project uses reusable Vue components:
+The project uses modular Vue components and utilities:
 
 ```text
 src/
 ├── components/
+│   ├── __tests__/
+│   │   ├── AppHeader.test.js
+│   │   ├── AppSession.test.js
+│   │   ├── AttendanceForm.test.js
+│   │   ├── AttendanceList.test.js
+│   │   └── AuthView.test.js
+│   ├── AppFooter.vue
 │   ├── AppHeader.vue
 │   ├── AttendanceForm.vue
 │   ├── AttendanceList.vue
-│   └── AppFooter.vue
+│   └── AuthView.vue
+├── utils/
+│   ├── attendanceUtils.js
+│   ├── attendanceUtils.test.js
+│   ├── authUtils.js
+│   ├── authUtils.test.js
+│   └── feedbackUtils.js
 ├── App.vue
 ├── main.js
 └── style.css
+```

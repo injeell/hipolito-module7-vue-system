@@ -1,10 +1,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 
+import AuthView from './components/AuthView.vue'
 import AppHeader from './components/AppHeader.vue'
 import AttendanceForm from './components/AttendanceForm.vue'
 import AttendanceList from './components/AttendanceList.vue'
 import AppFooter from './components/AppFooter.vue'
+import { getCurrentSession, logoutUser, initAuth } from './utils/authUtils.js'
+
+const currentUser = ref(null)
+const authFeedbackMessage = ref('')
 
 const records = ref([])
 const searchTerm = ref('')
@@ -15,11 +20,35 @@ const message = ref('')
 const messageType = ref('success')
 
 onMounted(() => {
+  initAuth()
+  currentUser.value = getCurrentSession()
+
   const saved = localStorage.getItem('attendance-records')
 
   if (saved) {
     records.value = JSON.parse(saved)
   }
+})
+
+function handleLogin(session) {
+  currentUser.value = session
+  authFeedbackMessage.value = ''
+  showMessage(`Welcome back, ${session.fullName}!`)
+}
+
+function handleLogout() {
+  const confirmed = window.confirm('Are you sure you want to log out?')
+  if (!confirmed) return
+
+  logoutUser()
+  currentUser.value = null
+  authFeedbackMessage.value = 'You have been logged out successfully.'
+}
+
+const userInitial = computed(() => {
+  return currentUser.value?.fullName
+    ? currentUser.value.fullName.charAt(0).toUpperCase()
+    : 'A'
 })
 
 function saveRecords() {
@@ -184,9 +213,20 @@ const absentPercentage = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#FFF9F4]">
+  <!-- AUTHENTICATION VIEW -->
+  <AuthView
+    v-if="!currentUser"
+    :initial-message="authFeedbackMessage"
+    @authenticated="handleLogin"
+  />
 
-    <AppHeader />
+  <!-- MAIN SYSTEM VIEW -->
+  <div v-else class="min-h-screen bg-[#FFF9F4]">
+
+    <AppHeader
+      :current-user="currentUser"
+      @logout="handleLogout"
+    />
 
     <div class="lg:pl-[270px] transition-all duration-300">
 
@@ -224,20 +264,29 @@ const absentPercentage = computed(() => {
             >
 
               <div class="admin-avatar">
-                A
+                {{ userInitial }}
               </div>
 
               <div class="min-w-0">
 
                 <p class="admin-name">
-                  Administrator
+                  {{ currentUser?.fullName || 'Administrator' }}
                 </p>
 
                 <p class="admin-role">
-                  Attendance Management
+                  {{ currentUser?.role || 'Attendance Management' }}
                 </p>
 
               </div>
+
+              <button
+                type="button"
+                @click="handleLogout"
+                class="ml-2 px-3 py-1.5 rounded-xl border border-[#E7DCD4] bg-[#FFFDFC] hover:bg-[#FAF0EA] text-xs font-semibold text-[#8B4B45] transition"
+                title="Log Out"
+              >
+                Log Out
+              </button>
 
             </div>
 
@@ -695,7 +744,7 @@ const absentPercentage = computed(() => {
 
       </main>
 
-      <AppFooter />
+      <AppFooter :current-user="currentUser" />
 
     </div>
 
